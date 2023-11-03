@@ -1,0 +1,52 @@
+{% extends "home.html" %}
+
+{% block title %}List Proposals{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1 class="text-center">Proposals</h1>
+
+        <!-- Proposal List -->
+        <div class="mt-4">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Company Name</th>
+                        <th>Name</th>
+                        <th>Actions</th>
+                        <th>Section</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for proposal in proposals %}
+                        <tr>
+                            <td>{{ proposal.title }}</td>
+                            <td>{{ proposal.company_name }}</td>
+                            <td>{{ proposal.username }}</td>
+                            <td>
+                                <form action="{% url 'save_record' proposal.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                </form>
+                            </td>
+                            <td>
+                                <a href="{% url 'view_proposal' proposal.id %}" class="btn btn-primary">View</a>
+                                <a href="{% url 'edit_proposal' proposal.id %}" class="btn btn-warning">Edit</a>
+                                <a href="{% url 'delete_proposal' proposal.id %}" class="btn btn-danger">Delete</a>
+                            </td>
+                            <td>
+                                <ul>
+                                    {% for section in proposal.sections.all %}
+                                        <li>{{ section.section_name }}</li>
+                                        <li>{{ section.content }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

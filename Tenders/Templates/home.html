@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Tender Proposal{% endblock %}</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        /* Custom styles for alignment and colors */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar {
+            background-color: rgb(72, 119, 133);
+            padding: 10px 0;
+        }
+        .navbar .navbar-brand img {
+            width: 120px;
+            height: auto;
+            padding-left: 50px;
+        }
+        .navbar .navbar-nav .nav-item a {
+            color: #fff;
+        }
+        .logout-button {
+            margin-right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="#">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOTdf8ZJE6i1FHnYkp9CfdHmedC60Xir3_qAcHrS7bEg&s" alt="" / style="margin-right: 30px;">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span> 
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+        <h3 style="margin-right: 30px;">Hello,{{ user.username }}</h3>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'list_proposals' %}">
+                        <i class="fa fa-home" aria-hidden="true"></i> Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'list_proposals' %}">List Proposals</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'create_proposal' %}">Create Proposal</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'saved_prop_display' %}">Saved</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'create_section_proposal' %}">Create Section Proposal</a>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="ml-auto">
+            <a class="btn btn-danger logout-button" href="{% url 'logout' %}">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Content -->
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>

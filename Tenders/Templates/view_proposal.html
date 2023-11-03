@@ -1,0 +1,110 @@
+{% extends "home.html" %}
+
+{% block title %}View Proposal{% endblock %}
+
+{% block content %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <!-- Header -->
+    <header class="mt-5 text-center">
+        <h1>View Proposal</h1>
+    </header>
+
+    <!-- Proposal Details -->
+    <main class="mt-4">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                {% if proposal %}
+                    <h2>{{ proposal.title }}</h2>
+                    <p><strong>Company Name:</strong> {{ proposal.company_name }}</p>
+                    <p><strong>Contact Name:</strong> {{ proposal.contact_name }}</p>
+                    <p><strong>Contact Email:</strong> {{ proposal.contact_email }}</p>
+                    <p><strong>Contact Phone:</strong> {{ proposal.contact_phone }}</p>
+                    <hr>
+                    <h3>Proposal Summary</h3>
+                    <p>{{ proposal.proposal_summary }}</p>
+                    <hr>
+                    <h3>Project Planning</h3>
+                    <p>{{ proposal.project_planning }}</p>
+                    <hr>
+                    <h3>Financing</h3>
+                    <p>{{ proposal.financing }}</p>
+                    <hr>
+                     
+                    <!-- Proposal Sections -->
+                    <div id="sections-container">
+                        <h2 class="text-center">Proposal Sections</h2>
+                        {% for section in sections %}
+                            <!-- Use a common container for section and reorder button -->
+                            <div class="section-container" data-section-id="{{ section.id }}" draggable="true">
+                                <div class="section">
+                                    <h3>{{ section.section_name }}</h3>
+                                    <p>{{ section.content }}</p><button class="reorder-button" data-section-id="{{ section.id }}" data-original-position="{{ forloop.counter0 }}">Reorder</button>
+
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                                        
+                {% else %}
+                    <p>The requested proposal does not exist.</p>
+                {% endif %}
+            </div>
+        </div>
+        <center><a href="{% url 'proposal_pdf' proposal.id %}" class="btn btn-primary" >Download as PDF</a></center>    
+    </main>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const csrfToken = getCookie('csrftoken');
+            let draggedContainer = null;
+        
+            // Enable drag-and-drop for section containers
+            const sectionContainers = document.querySelectorAll(".section-container");
+            sectionContainers.forEach((container) => {
+                container.addEventListener("dragstart", (e) => {
+                    draggedContainer = e.target;
+                    e.dataTransfer.setData("text/plain", null);
+                });
+            });
+        
+            // Enable drag-and-drop for the section list
+            const sectionContainer = document.getElementById("sections-container");
+            sectionContainer.addEventListener("dragover", (e) => {
+                e.preventDefault();
+            });
+        
+            sectionContainer.addEventListener("drop", (e) => {
+                e.preventDefault();
+                if (draggedContainer) {
+                    sectionContainer.appendChild(draggedContainer);
+                    draggedContainer = null;
+                }
+            });
+        
+            // Resetting to original order on "Reorder Sections" button click
+            const reorderButtons = document.querySelectorAll(".reorder-button");
+            reorderButtons.forEach((button) => {
+                button.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    const sectionId = button.getAttribute("data-section-id");
+                    const sectionContainer = document.querySelector(`.section-container[data-section-id="${sectionId}"]`);
+                    const originalOrder = Array.from(sectionContainer.parentNode.children);
+                    const originalIndex = parseInt(sectionContainer.getAttribute("data-original-position"));
+                    sectionContainer.parentNode.insertBefore(sectionContainer, originalOrder[originalIndex]);
+                });
+            });
+        });
+        
+        function getCookie(name) {
+            let value = "; " + document.cookie;
+            let parts = value.split("; " + name + "=");
+            if (parts.length == 2) return parts.pop().split(";").shift();
+        }
+        
+        
+    </script>
+    
+    
+    
+{% endblock %}
